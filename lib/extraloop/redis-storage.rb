@@ -1,0 +1,23 @@
+require "rubygems"
+require "redis"
+require 'pry'
+require "ohm"
+require "extraloop"
+
+base_path = File.realpath(File.dirname(__FILE__))
+
+module ExtraLoop
+  module Storage
+    VERSION = "0.0.1"
+
+    class << self
+      def connect(*args)
+        Ohm.connect(*args)
+      end
+    end
+  end
+end
+
+ExtraLoop::Storage.autoload :ScrapingSession, "#{base_path}/redis-storage/scraping_session.rb"
+ExtraLoop::Storage.autoload :DatasetFactory,  "#{base_path}/redis-storage/dataset_factory.rb"
+
