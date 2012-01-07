@@ -8,13 +8,8 @@ module ExtraLoop
       def initialize(classname, attributes=[])
         @classname = classname.to_s.capitalize
 
-        Object.const_set(@classname, Class.new(Ohm::Model) {
-          reference :session, ScrapingSession
+        Object.const_set(@classname, Class.new(Record) {
           attributes.each { |attr| attribute attr }
-
-          def validate
-            assert_present :session
-          end
         })
       end
 

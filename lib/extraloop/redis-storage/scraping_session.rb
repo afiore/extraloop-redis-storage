@@ -1,7 +1,11 @@
 module ExtraLoop
   module Storage
-
     class ScrapingSession < Ohm::Model
+
+      include Ohm::Boundaries
+      include Ohm::Timestamping
+
+
       attribute :title
 
       def records(collection)

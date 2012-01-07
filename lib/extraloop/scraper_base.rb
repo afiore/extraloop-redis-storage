@@ -1,19 +1,29 @@
 class ScraperBase
-  def set_storage(model, &block)
-    log_session! if @request_count === 0
+  def set_storage(model, title = "", &block)
+    log_session!(title) if @request_count === 0
 
-    @model = model.respond_to?(:new) ? 
-      model : ExtraLoop::Storage::DatasetFactory.new(model.to_sym, @extractor_args.map &:first)
+    @model = model.respond_to?(:new) ?
+      model : ExtraLoop::Storage::DatasetFactory.new(model.to_sym, @extractor_args.map &:first).get_class
 
     on(:data, proc { |results|
-      # TODO::results should be first converted in instances of the dataset class
-      block && block.call(results) || results.each do |results|
-      end
+      results = results.map { |result| instanciate_model(result) }
+      block && block.call(results) || results.each &:save
     })
   end
 
   protected
-  def log_session!
-    
+
+  # Creates a scraping session
+
+  def log_session!(title="")
+    @session ||= ExtraLoop::Storage::ScrapingSession.create :title => title
+  end
+
+  # Converts extracted records into instances of the dataset model specified as the first argument
+  # of #set_storage
+
+  def instanciate_model(record)
+    attrs = {:session => @session }.merge(record.respond_to?(:marshal_dump) ? record.marshal_dump : record)
+    @model.new(attrs)
   end
 end

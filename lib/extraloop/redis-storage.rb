@@ -2,6 +2,7 @@ require "rubygems"
 require "redis"
 require 'pry'
 require "ohm"
+require "ohm/contrib"
 require "extraloop"
 
 base_path = File.realpath(File.dirname(__FILE__))
@@ -18,6 +19,7 @@ module ExtraLoop
   end
 end
 
+ExtraLoop::Storage.autoload :Record, "#{base_path}/redis-storage/record.rb"
 ExtraLoop::Storage.autoload :ScrapingSession, "#{base_path}/redis-storage/scraping_session.rb"
 ExtraLoop::Storage.autoload :DatasetFactory,  "#{base_path}/redis-storage/dataset_factory.rb"
 

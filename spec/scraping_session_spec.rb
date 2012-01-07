@@ -8,7 +8,9 @@ describe ExtraLoop::Storage::ScrapingSession do
     before(:each) do
       my_collection = ExtraLoop::Storage::DatasetFactory.new(:MyCollection).get_class
       @session = ExtraLoop::Storage::ScrapingSession.create
-      5.times { my_collection.create :session => @session }
+      5.times do
+        item = my_collection.create(:session => @session)
+      end
     end
 
     context "dataset class exists" do
