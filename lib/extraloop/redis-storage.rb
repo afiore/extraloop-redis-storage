@@ -7,6 +7,10 @@ require "ohm/contrib"
 require "extraloop"
 
 base_path = File.realpath(File.dirname(__FILE__))
+$: << "#{base_path}"
+require "scraper_base"
+
+
 
 module ExtraLoop
   module Storage
