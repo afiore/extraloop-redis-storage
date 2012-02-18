@@ -9,7 +9,7 @@ module ExtraLoop
       attribute :title
 
       def records(collection)
-        Kernel.const_get(collection.to_s.capitalize).
+        Kernel.const_get(collection.to_s).
           find(:session_id => self.id)
       end
     end

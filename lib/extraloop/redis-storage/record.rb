@@ -5,10 +5,8 @@ module ExtraLoop
       include Ohm::Boundaries
       include Ohm::Timestamping
 
-
       reference :session, ExtraLoop::Storage::ScrapingSession
       attribute :extracted_at
-
 
       def self.create(attrs={})
 
@@ -30,9 +28,6 @@ module ExtraLoop
           memo.merge(attribute => send(attribute)) 
         })
       end
-
-
-
 
       def validate
         assert_present :session

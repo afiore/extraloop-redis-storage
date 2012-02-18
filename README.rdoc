@@ -1,0 +1,47 @@
+= Extraloop Redis Storage
+
+== Description
+
+{Redis}[http://redis.io] persistence add-on for the {ExtraLoop}[https://github.com/afiore/extraloop-redis] data extraction toolkit.
+This module internally wraps +{Ohm}[http://ohm.keyvalue.org], an object-hash mapping library which 
+makes persisting ruby objects in Redis easy and convenient.
+
+== Installation 
+
+ gem install extraloop-redis-storage
+
+== Usage
+
+Extraloop's storage module simply decorates the +ExtraLoop::ScraperBase+ and +ExtraLoop::IterativeScraper+ instances with a 
+convenient method allowing to specify how a scraper results should be stored.
+  
+ require "extraloop/redis-storage"
+
+ #
+ # Define a model for Amazon reviews (ExtraLoop::Storage::Record is a subclass of Ohm::Model)
+ #
+
+ class AmazonReview < ExtraLoop::Storage::Record
+   attribute :title
+   attribute :author
+   attribute :star
+
+   def validate
+     (0..5).include star.to_i or  && false
+   end
+ end
+
+ #
+ # Instanciate a subclass of Extraloop::
+ #
+
+ scraper = AmazonReviewScraper.new "0262560992"
+
+ # store results using the AmazonReview model
+
+ scraper.set_storage(AmazonReview)
+   .run()
+
+== #set_storage
+
+...

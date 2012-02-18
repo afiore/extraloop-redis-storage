@@ -14,7 +14,7 @@ require "scraper_base"
 
 module ExtraLoop
   module Storage
-    VERSION = "0.0.1"
+    VERSION ||= "0.0.1"
 
     class << self
       def connect(*args)
