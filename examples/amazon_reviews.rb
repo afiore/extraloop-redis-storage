@@ -15,8 +15,10 @@ class AmazonReview < ExtraLoop::Storage::Record
   end
 end
 
-AmazonReviewScraper.new("0262560992").
+scraper = AmazonReviewScraper.new("0262560992").
   set_storage(AmazonReview).
   run
 
-binding.pry
+records = AmazonReview.find :session_id => scraper.session.id
+puts "#{records.size} reviews have been created"
+

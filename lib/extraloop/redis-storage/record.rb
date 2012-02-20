@@ -1,37 +1,44 @@
-module ExtraLoop
-  module Storage
+class ExtraLoop::Storage::Record < Ohm::Model
+  include Ohm::Boundaries
+  include Ohm::Timestamping
 
-    class Record < Ohm::Model
-      include Ohm::Boundaries
-      include Ohm::Timestamping
+  reference :session, ExtraLoop::Storage::ScrapingSession
+  attribute :extracted_at
+  index :session_id
 
-      reference :session, ExtraLoop::Storage::ScrapingSession
-      attribute :extracted_at
+  def initialize attrs={}
+    self.class.send :_inherit!
+    super attrs
+  end
 
-      def self.create(attrs={})
+  def self.create attrs={}
+    _inherit!
+    super attrs
+  end
 
-        # walk up the class hierarchy and incorporate
-        # superclass attributes 
+  def to_hash
+    super.merge(attributes.reduce({}) { |memo, attribute| 
+      memo.merge(attribute => send(attribute)) 
+    })
+  end
 
-        klass = self
-        while klass != Record
-          attributes.concat(klass.superclass.attributes).uniq!
-          indices.concat(klass.superclass.indices).uniq!
-          klass = klass.superclass
-        end
+  def validate
+    assert_present :session
+  end
 
-        super(attrs)
-      end
+  # 
+  # walks up the class hierarchy and incorporate
+  # Ohm attributes and indices from the superclasses
+  #
+  def self._inherit!
+    klass = self
 
-      def to_hash
-        super.merge(attributes.reduce({}) { |memo, attribute| 
-          memo.merge(attribute => send(attribute)) 
-        })
-      end
-
-      def validate
-        assert_present :session
-      end
+    while klass != ExtraLoop::Storage::Record
+      attributes.concat(klass.superclass.attributes).uniq!
+      indices.concat(klass.superclass.indices).uniq!
+      klass = klass.superclass
     end
   end
+
+  private_class_method :_inherit!
 end

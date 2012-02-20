@@ -14,23 +14,12 @@ describe ExtraLoop::Storage::ScrapingSession do
     end
 
     context "dataset class exists" do
-
-      context "passing a symbol" do
-        subject { @session.records(:MyCollection) }
-        it { should have(5).items  }
-        it { subject.all? { |record| record.valid? }.should be_true }
-      end
-
-      context "passing a string" do
-        subject { @session.records('MyCollection') }
+      context "passing a constant" do
+        subject { @session.records(Mycollection) }
         it { should have(5).items  }
         it { subject.all? { |record| record.valid? }.should be_true }
       end
     end
 
-    after do
-      patterns = ["Mycollection", "ExtraLoop"]
-      patterns.each { |pattern| Ohm.redis.keys("*#{pattern}*").each { |key| Ohm.redis.del(key)} }
-    end
   end
 end

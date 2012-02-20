@@ -1,4 +1,6 @@
 class ExtraLoop::ScraperBase
+  attr_reader :session
+
   def set_storage(*args)
     model = args.detect { |arg| arg.is_a?(Symbol) or arg.respond_to?(:new) }
     title = args.detect { |arg| arg.is_a?(String) }
@@ -30,7 +32,7 @@ class ExtraLoop::ScraperBase
 
   def instanciate_model(record)
     record_hash = record.respond_to?(:marshal_dump) ? record.marshal_dump : record
-    attrs = {:session_id => @session.id }.merge(record_hash)
+    attrs = {:session => @session }.merge(record_hash)
     @model.new(attrs)
   end
 end

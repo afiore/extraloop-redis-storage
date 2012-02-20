@@ -2,9 +2,9 @@
 
 == Description
 
-{Redis}[http://redis.io] persistence add-on for the {ExtraLoop}[https://github.com/afiore/extraloop-redis] data extraction toolkit.
-This module internally wraps +{Ohm}[http://ohm.keyvalue.org], an object-hash mapping library which 
-makes persisting ruby objects in Redis easy and convenient.
+A persistence layer for the {ExtraLoop}[https://github.com/afiore/extraloop] data extraction toolkit.
+The module is implemented as a small wrapper built on top of {Ohm}[http://ohm.keyvalue.org], an object-hash mapping library which 
+makes storing and managing Ruby objects in Redis easy and convenient.
 
 == Installation 
 
@@ -12,14 +12,10 @@ makes persisting ruby objects in Redis easy and convenient.
 
 == Usage
 
-Extraloop's storage module simply decorates the +ExtraLoop::ScraperBase+ and +ExtraLoop::IterativeScraper+ instances with a 
-convenient method allowing to specify how a scraper results should be stored.
-  
- require "extraloop/redis-storage"
+Extraloop's Redis storage module decorates +ExtraLoop::ScraperBase+ and +ExtraLoop::IterativeScraper+ instances 
+with the +set_storage+ method: a helper method that allows to specify how the scraped data should be stored.
 
- #
- # Define a model for Amazon reviews (ExtraLoop::Storage::Record is a subclass of Ohm::Model)
- #
+ require "extraloop/redis-storage"
 
  class AmazonReview < ExtraLoop::Storage::Record
    attribute :title
@@ -31,17 +27,31 @@ convenient method allowing to specify how a scraper results should be stored.
    end
  end
 
- #
- # Instanciate a subclass of Extraloop::
- #
-
- scraper = AmazonReviewScraper.new "0262560992"
-
- # store results using the AmazonReview model
-
- scraper.set_storage(AmazonReview)
+ scraper = AmazonReviewScraper.new("0262560992").
+   .set_storage(AmazonReview, "Amazon reviews of 'The Little Schemer'")
    .run()
 
-== #set_storage
+At each scraper run, the ExtraLoop storage module internally instantiates a 
+session (see +ExtraLoop::Storage::ScrapingSession+) and link the extracted records to it.
+The +AmazonReview+ instances extracted and stored in the example above, can in fact be fetched by calling
+Ohm's +find+ with the session id as argument.
 
-...
+ reviews = AmazonReview.find :session_id => scraper.session
+
+The same set of reviews can alternatively be retrieved by calling the +record+ method on the scraping 
+session instance:
+
+ reviews = scraper.session.records AmazonReview
+
+
+== The #set_storage method
+
+The +set_storage+ method can be called with the following arguments:
+
+* _model_ A Ruby constant specifying the model to be used for storing the extracted data (optional; when this argument is not provided, a simple-non validating model will be generated on the fly).
+* _session_title_ A human readable name for the extracted dataset.
+
+== Running the test suite
+
+A basic Rspec test suite can be run by executing the +rspec\ *+ command from within the  +spec/+ directory.
+
