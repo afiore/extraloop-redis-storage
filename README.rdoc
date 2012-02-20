@@ -2,7 +2,7 @@
 
 == Description
 
-A persistence layer for the {ExtraLoop}[https://github.com/afiore/extraloop] data extraction toolkit.
+Persistence layer for the {ExtraLoop}[https://github.com/afiore/extraloop] data extraction toolkit.
 The module is implemented as a small wrapper built on top of {Ohm}[http://ohm.keyvalue.org], an object-hash mapping library which 
 makes storing and managing Ruby objects in Redis easy and convenient.
 
@@ -53,5 +53,5 @@ The +set_storage+ method can be called with the following arguments:
 
 == Running the test suite
 
-A basic Rspec test suite can be run by executing the +rspec\ *+ command from within the  +spec/+ directory.
+The test suite can be run by executing the +rspec\ \*+ command from within the  +spec/+ directory.
 
