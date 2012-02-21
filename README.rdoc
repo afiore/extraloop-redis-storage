@@ -48,8 +48,8 @@ session instance:
 
 The +set_storage+ method can be called with the following arguments:
 
-* _model_ A Ruby constant specifying the model to be used for storing the extracted data (optional; when this argument is not provided, a simple-non validating model will be generated on the fly).
-* _session_title_ A human readable name for the extracted dataset.
+* _model_ A Ruby constant specifying the model to be used for storing the extracted data .
+* _session_title_ A human readable title for the extracted dataset (optional).
 
 == Running the test suite
 
