@@ -4,7 +4,6 @@ require "date"
 require "./lib/amazon_review_scraper.rb"
 require "../lib/extraloop/redis-storage.rb"
 
-
 class AmazonReview < ExtraLoop::Storage::Record
   attribute :title
   attribute :rank
