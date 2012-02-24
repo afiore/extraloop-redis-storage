@@ -19,11 +19,11 @@ with the +set_storage+ method: a helper method that allows to specify how the sc
 
  class AmazonReview < ExtraLoop::Storage::Record
    attribute :title
-   attribute :author
-   attribute :star
+   attribute :rank
+   attribute :date
 
    def validate
-     (0..5).include star.to_i or  && false
+     assert (0..5).include?(rank.to_i), "Rank not in range"
    end
  end
 
