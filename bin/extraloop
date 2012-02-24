@@ -9,39 +9,45 @@ class DataStoreCommand < Thor
   @@sessions = ExtraLoop::Storage::ScrapingSession.all
   @@redis = Ohm.redis
 
-  desc "list", "List harvested datasets"
+  map "l" => :list
 
-  def list
-    data = @@sessions.map { |session| [ session.id, session.title, session.model && session.model.name, session.model && session.records.size ]}
-    headers = %w[id title model records]
-    $stdout.puts tabularize(headers, data)
+  desc "list [sessions]", "List harvested datasets filtering by session id range (e.g '25..50')"
+  def list(sessions=nil)
+    sessions = items sessions
+    data = sessions.map { |session| [ session.id, session.title, session.model && session.model.name, session.model && session.records.size ]}
+    $stdout.puts tabularize(%w[id title model records], data)
   end
 
-  desc "delete", "Remove one or several items"
-
-  def delete
-    #items(arg).each &:delete
+  desc "delete [session]", "Remove datasets by session id or range"
+  def delete(sessions)
+    deleted = 0
+    (items sessions).each { |session| (session.delete && session.records.each(&:delete) ) && deleted += 1 }
+    $stderr.puts "\n => #{deleted > 0 && deleted or 'No' } record#{'s' if deleted > 1} deleted \n\n" 
+    list
   end
 
   private
-  def items(arg)
-    start_end = /(\d+)\.\.(\d+)/.match(arg) ? [$1, $2] : [arg, arg]
-    Array(Range.new *start_end).map { |sid| @@sessions[sid] }
+  def items(arg=nil)
+    if arg
+      start_end = /(\d+)\.\.(-?\d+)/.match(arg) ? [$1, $2] : [arg, arg]
+      Array(Range.new *start_end).map { |sid| @@sessions[sid] if @@sessions[sid] }.reject(&:nil?)
+    else
+      @@sessions
+    end
   end
 
   def tabularize(headers, data)
     rows = [headers].concat data.map { |row| row.take(headers.size) }
 
-    max_cell_sizes = Range.new(0, headers.size).to_a.map do |coll_index|
-      data.map { |row| row[coll_index].to_s.length }.max
+    max_cell_sizes = Array(Range.new 0, headers.size).map do |coll_index|
+      rows.map { |row| row[coll_index].to_s.length }.max
     end
 
     rows = rows.map do |row|
-      "  " << row.each_with_index.map { |cell, index| cell.to_s.ljust(max_cell_sizes[index]) }.join(" | ")
+      " " << row.each_with_index.map { |cell, index| cell.to_s.ljust(max_cell_sizes[index]) }.join(" | ")
     end
 
     separator = "-" * (rows.map &:size).max
-
     rows.insert(1, separator).join "\n"
   end
 end
