@@ -26,5 +26,7 @@ end
 
 ExtraLoop::Storage.autoload :Record, "#{base_path}/redis-storage/record.rb"
 ExtraLoop::Storage.autoload :ScrapingSession, "#{base_path}/redis-storage/scraping_session.rb"
+ExtraLoop::Storage.autoload :Model,  "#{base_path}/redis-storage/model.rb"
 ExtraLoop::Storage.autoload :DatasetFactory,  "#{base_path}/redis-storage/dataset_factory.rb"
+
 

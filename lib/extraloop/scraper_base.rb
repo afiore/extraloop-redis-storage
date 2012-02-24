@@ -4,9 +4,9 @@ class ExtraLoop::ScraperBase
   def set_storage(model, title=nil)
     collection_name = "#{Time.now.to_i} #{model.to_s} Dataset"
     title ||= collection_name
-    log_session! title
 
     @model = model_klass = model.respond_to?(:new) && model || ExtraLoop::Storage::DatasetFactory.new(model.to_sym, @extractor_args.map(&:first)).get_class
+    log_session! title
 
     on :data do |results|
       results = results.map { |result| @scraper.send(:instanciate_model, result) }
@@ -17,7 +17,12 @@ class ExtraLoop::ScraperBase
   protected
   # Creates a scraping session
   def log_session!(title="")
-    @session ||= ExtraLoop::Storage::ScrapingSession.create :title => title
+    if !@session
+      ns = ExtraLoop::Storage
+      results = ns::Model.find :name => @model
+      model = results.any? && results.first || ns::Model.create(:name => @model)
+      @session = ns::ScrapingSession.create :title => title, :model =>  model
+    end
   end
 
   # Converts extracted records into instances of the dataset model specified as the first argument
