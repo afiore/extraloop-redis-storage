@@ -26,6 +26,7 @@ module ExtraLoop
 end
 
 autoload :CSV, 'csv'
+autoload :Iconv, 'iconv'
 ExtraLoop::Storage.autoload :Record, "#{base_path}/redis-storage/record.rb"
 ExtraLoop::Storage.autoload :ScrapingSession, "#{base_path}/redis-storage/scraping_session.rb"
 ExtraLoop::Storage.autoload :Model,  "#{base_path}/redis-storage/model.rb"

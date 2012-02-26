@@ -1,11 +1,15 @@
 class ExtraLoop::Storage::ScrapingSession < Ohm::Model
 
+  BOM = "\377\376" #Byte Order Mark
+
   include Ohm::Boundaries
   include Ohm::Timestamping
   include Ohm::Callbacks
 
   attribute :title
   reference :model, ExtraLoop::Storage::Model
+  
+
 
   def records(params={})
     klass = if Object.const_defined?(model.name)
@@ -50,7 +54,6 @@ class ExtraLoop::Storage::ScrapingSession < Ohm::Model
     _records = Array records.all.map &:to_hash
     header = _records.first && _records.first.keys.map(&:to_s)
     data = [header].concat _records.map(&:values)
-
-    data.map { |cells| CSV.generate_line cells }.join
+    output = data.map { |cells| CSV.generate_line cells }.join
   end
 end
