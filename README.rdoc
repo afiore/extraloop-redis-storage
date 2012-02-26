@@ -12,7 +12,7 @@ makes storing and managing Ruby objects in Redis easy and convenient.
 
 == Usage
 
-Extraloop's Redis storage module decorates +ExtraLoop::ScraperBase+ and +ExtraLoop::IterativeScraper+ instances 
+Extraloop's Redis storage module decorates <code>ExtraLoop::ScraperBase</code> and <code>ExtraLoop::IterativeScraper</code> instances 
 with the +set_storage+ method: a helper method that allows to specify how the scraped data should be stored.
 
  require "extraloop/redis-storage"
@@ -32,7 +32,7 @@ with the +set_storage+ method: a helper method that allows to specify how the sc
    .run()
 
 At each scraper run, the ExtraLoop storage module internally instantiates a 
-session (see +ExtraLoop::Storage::ScrapingSession+) and link the extracted records to it.
+session (see <code>ExtraLoop::Storage::ScrapingSession</code>) and link the extracted records to it.
 The +AmazonReview+ instances extracted and stored in the example above, can in fact be fetched by calling
 Ohm's +find+ with the session id as argument.
 
