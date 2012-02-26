@@ -34,7 +34,7 @@ class DataStoreCommand < Thor
 
   desc "export [sessions]", "Export datasets by session id or session id range"
 
-  method_option :format, :default => 'json', :type => 'string'
+  method_option :format, :default => 'json', :type => 'string', :aliases => "-f"
   method_option :directory, :default => "#{Time.now.to_i}-export", :aliases => "-o"
   method_option :require, :type => 'array', :aliases => "-r"
 
@@ -43,8 +43,8 @@ class DataStoreCommand < Thor
     require_files paths if paths.any?
     format = options[:format]
     dir = options[:directory]
-
-    raise FormatNotImplemented.new unless %w[json].include? format
+    exception = DataStoreCommand::Exceptions::FormatNotImplemented.new "Format not supported #{format}"
+    raise exception unless %w[json csv].include? format
     FileUtils.mkdir(dir) unless File.exists? dir
 
     (filter sessions).each do |session|

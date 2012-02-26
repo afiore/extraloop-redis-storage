@@ -47,5 +47,10 @@ class ExtraLoop::Storage::ScrapingSession < Ohm::Model
   end
 
   def to_csv
+    _records = Array records.all.map &:to_hash
+    header = _records.first && _records.first.keys.map(&:to_s)
+    data = [header].concat _records.map(&:values)
+
+    data.map { |cells| CSV.generate_line cells }.join
   end
 end
