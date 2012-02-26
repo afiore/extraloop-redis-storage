@@ -2,38 +2,84 @@
 $: << File.realpath(File.dirname(File.dirname(__FILE__))) + "/lib/extraloop"
 
 require 'thor'
+require 'pry'
+require 'fileutils'
 require 'thor/group'
 require 'redis-storage'
 
 class DataStoreCommand < Thor
+
+  ExtraLoop::Storage::autoload_models
+
   @@sessions = ExtraLoop::Storage::ScrapingSession.all
   @@redis = Ohm.redis
 
-  map "l" => :list
+  map "l" => :list,
+      "d" => :delete,
+      "e" => :export
 
   desc "list [sessions]", "List harvested datasets filtering by session id range (e.g '25..50')"
   def list(sessions=nil)
-    sessions = items sessions
-    data = sessions.map { |session| [ session.id, session.title, session.model && session.model.name, session.model && session.records.size ]}
+    data = (filter sessions).map { |session| [ session.id, session.title, session.model && session.model.name, session.model && session.records.size ]}
     $stdout.puts tabularize(%w[id title model records], data)
   end
 
-  desc "delete [session]", "Remove datasets by session id or range"
+  desc "delete [sessions]", "Remove datasets by session id or session id range"
   def delete(sessions)
     deleted = 0
-    (items sessions).each { |session| (session.delete && session.records.each(&:delete) ) && deleted += 1 }
+    (filter sessions).each { |session| (session.delete && session.records.each(&:delete) ) && deleted += 1 }
     $stderr.puts "\n => #{deleted > 0 && deleted or 'No' } record#{'s' if deleted > 1} deleted \n\n" 
     list
   end
 
+  desc "export [sessions]", "Export datasets by session id or session id range"
+
+  method_option :format, :default => 'json', :type => 'string'
+  method_option :directory, :default => "#{Time.now.to_i}-export", :aliases => "-o"
+  method_option :require, :type => 'array', :aliases => "-r"
+
+  def export(sessions)
+    paths = Array options[:require]
+    require_files paths if paths.any?
+    format = options[:format]
+    dir = options[:directory]
+
+    raise FormatNotImplemented.new unless %w[json].include? format
+    FileUtils.mkdir(dir) unless File.exists? dir
+
+    (filter sessions).each do |session|
+      filename, data = *[session.title.gsub(/\s/,"_"), session.send("to_#{format}")]
+      File.open("#{dir}/#{filename}.#{format}", "w") { |f| f.write data }
+    end
+  end
+
+  # override default banner
+  def self.banner(task, namespace = true, subcommand = false)
+    "datastore#{task.formatted_usage(self, true, subcommand).gsub(/data_store_command/,'')}"
+  end
+
   private
-  def items(arg=nil)
-    if arg
+  def require_files(paths)
+    files = paths.map do |path|
+      path = path.gsub /^(\.?\/)|(\/$)$/m, ''
+      exception = DataStoreCommand::Exceptions::FileNotFound.new "cannot find #{path}"
+      raise exception unless File.exists?(path)
+      (File.directory? path) && Dir["#{path}/*.rb"] or path
+
+    end.flatten
+
+    files.each { |file| require "./#{file}" }
+  end
+
+
+  def filter(arg=nil)
+    out = if arg
       start_end = /(\d+)\.\.(-?\d+)/.match(arg) ? [$1, $2] : [arg, arg]
       Array(Range.new *start_end).map { |sid| @@sessions[sid] if @@sessions[sid] }.reject(&:nil?)
     else
       @@sessions
     end
+
   end
 
   def tabularize(headers, data)
@@ -52,7 +98,10 @@ class DataStoreCommand < Thor
   end
 end
 
-
+class DataStoreCommand::Exceptions
+  class FormatNotImplemented < StandardError; end
+  class FileNotFound < StandardError; end
+end
 
 class ExtraLoopCommand < Thor
   register(DataStoreCommand, "datastore", "datastore <command>", "CLI interface to the ExtraLoop Redis Datastore")

@@ -1,25 +1,26 @@
 require "json"
 require "rubygems"
 require "redis"
-require 'pry'
 require "ohm"
 require "ohm/contrib"
 require "extraloop"
 
 base_path = File.realpath(File.dirname(__FILE__))
 $: << "#{base_path}"
+
 require "scraper_base"
-
-
 
 module ExtraLoop
   module Storage
     VERSION ||= "0.0.1"
 
-    class << self
-      def connect(*args)
-        Ohm.connect(*args)
-      end
+    def self.connect(*args)
+      Ohm.connect(*args)
+    end
+
+    # Tries to automatically locate the models directory and load all ruby files within in
+    def self.autoload_models(dirname='models')
+      Dir["**/**#{dirname}/*.rb"].each { |path| require "./#{path}" }
     end
   end
 end

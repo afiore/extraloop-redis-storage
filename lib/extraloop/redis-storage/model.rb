@@ -4,4 +4,10 @@
 class ExtraLoop::Storage::Model < Ohm::Model
   attribute :name
   index :name
+
+  def to_hash
+    super.merge(attributes.reduce({}) { |memo, attribute| 
+      memo.merge(attribute => send(attribute)) 
+    })
+  end
 end

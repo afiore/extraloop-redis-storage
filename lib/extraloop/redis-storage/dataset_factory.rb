@@ -6,7 +6,8 @@ class ExtraLoop::Storage::DatasetFactory
 
     @classname = (classname.to_s.split "").each_with_index.map { |char, index| index == 0 && char.upcase or char }.join
 
-    return if Object.const_defined? @classname
+    return Object.const_get @classname if Object.const_defined? @classname
+
     Object.const_set(@classname, Class.new(ExtraLoop::Storage::Record) {
       attributes.each { |attr| attribute attr }
     })

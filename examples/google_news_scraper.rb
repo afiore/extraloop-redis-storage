@@ -12,6 +12,6 @@ google_news_scraper = ExtraLoop::IterativeScraper.new("https://www.google.com/se
   set_storage(:GoogleNewsStory).
   run
 
-puts "#{GoogleNewsStory.all.size} news stories fetched..."
+puts "#{GoogleNewsStory.all.to_a.size} news stories fetched..."
 
 

@@ -8,11 +8,23 @@ class ExtraLoop::Storage::ScrapingSession < Ohm::Model
   reference :model, ExtraLoop::Storage::Model
 
   def records(params={})
-    klass = Object.const_defined?(model.name) ?
-      Object.const_get(model.name) :
-      Object.const_set(model.name, Class.new(ExtraLoop::Storage::Record))
+    klass = if Object.const_defined?(model.name)
+        Object.const_get(model.name)
+      else
+        dynamic_class = Class.new(ExtraLoop::Storage::Record) do
+          # override default to_hash so that it will return the Redis hash
+          # internally stored by Ohm
+          def to_hash
+            Ohm.redis.hgetall self.key
+          end
+        end
 
-    klass.index :session_id if klass.indices.empty?
+        Object.const_set(model.name, dynamic_class)
+        dynamic_class
+    end
+
+    # set a session index, so that Ohm finder will work
+    klass.indices << :session_id unless klass.indices.include? :session_id
 
     klass.find({
       :session_id => self.id
@@ -23,7 +35,15 @@ class ExtraLoop::Storage::ScrapingSession < Ohm::Model
     assert_present :model
   end
 
-  def to_json
+  def to_hash
+    attrs = attributes.reduce({}) { |memo, attribute| 
+      memo.merge(attribute => send(attribute))
+    }.merge({
+      :records => records.map(&:to_hash),
+      :model => model.to_hash
+    })
+
+    super.merge attrs
   end
 
   def to_csv

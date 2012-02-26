@@ -51,7 +51,3 @@ The +set_storage+ method can be called with the following arguments:
 * _model_ A Ruby constant specifying the model to be used for storing the extracted data .
 * _session_title_ A human readable title for the extracted dataset (optional).
 
-== Running the test suite
-
-The test suite can be run by executing the +rspec\ \*+ command from within the  +spec/+ directory.
-
