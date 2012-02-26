@@ -3,8 +3,9 @@
 == Description
 
 Persistence layer for the {ExtraLoop}[https://github.com/afiore/extraloop] data extraction toolkit.
-The module is implemented as a small wrapper built on top of {Ohm}[http://ohm.keyvalue.org], an object-hash mapping library which 
-makes storing and managing Ruby objects in Redis easy and convenient.
+This module is implemented as a wrapper around {Ohm}[http://ohm.keyvalue.org], an object-hash mapping library which 
+makes easy storing structured data into Redis. It comes with a convinent command line tool, which allows to 
+list, filter, delete, and export harvested datasets.
 
 == Installation 
 
@@ -44,11 +45,11 @@ session instance:
  reviews = scraper.session.records AmazonReview
 
 
-== The #set_storage method
+=== The #set_storage method
 
 The +set_storage+ method can be called with the following arguments:
 
 * _model_ A Ruby constant specifying the model to be used for storing the extracted data .
 * _session_title_ A human readable title for the extracted dataset (optional).
 
-
+== Command line interface
