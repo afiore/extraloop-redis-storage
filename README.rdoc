@@ -52,4 +52,27 @@ The +set_storage+ method can be called with the following arguments:
 * _model_ A Ruby constant specifying the model to be used for storing the extracted data .
 * _session_title_ A human readable title for the extracted dataset (optional).
 
-== Command line interface
+== Command line interface 
+
+Once installed, the gem will also add to your system path the +extraloop+ executable, a command line interface to the datasets harvested through extraloop.
+A list of datasets can be obtained by running:
+
+ extraloop datastore list:
+
+This will generate a table like the following one:
+<code>
+  id | title                              | model           | records
+ --------------------------------------------------------------------
+  48 | 1330106699 GoogleNewsStory Dataset | GoogleNewsStory | 110    
+  49 | 1330106948 AmazonReview Dataset    | AmazonReview    | 0      
+  51 | 1330107087 GoogleNewsStory Dataset | GoogleNewsStory | 110    
+  52 | 1330111630 AmazonReview Dataset    | AmazonReview    | 10     
+</code>
+
+Datasets can by removed using subcommand:
+
+ extraloop datastore delete [id]
+
+Where +id+ is either a single scraping session id, or a session id range (e.g. 48..52).
+
+
