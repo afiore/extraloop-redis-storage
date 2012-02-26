@@ -69,10 +69,10 @@ This will generate a table like the following one:
   52 | 1330111630 AmazonReview Dataset    | AmazonReview    | 10     
 </code>
 
-Datasets can by removed using subcommand:
+Datasets can by removed using the +delete+ subcommand:
 
  extraloop datastore delete [id]
 
 Where +id+ is either a single scraping session id, or a session id range (e.g. 48..52).
-
-
+Finally, the +export+ subcommand allows to export one or several datasets into a JSON or CSV documents.
+Please refer to the executable inline help (<code>extraloop datastore help [command]</code>) for more usage information.
