@@ -33,28 +33,21 @@ with the +set_storage+ method: a helper method that allows to specify how the sc
    .run()
 
 At each scraper run, the ExtraLoop storage module internally instantiates a 
-session (see <code>ExtraLoop::Storage::ScrapingSession</code>) and link the extracted records to it.
-The +AmazonReview+ instances extracted and stored in the example above, can in fact be fetched by calling
-Ohm's +find+ with the session id as argument.
+session (see <code>ExtraLoop::Storage::ScrapingSession</code>) and associates the extracted records to it.
+The `AmazonReview` records just created, can now be accessed by calling the `#records` metod on scraper session object.
 
- reviews = AmazonReview.find :session_id => scraper.session
+ reviews = scraper.session.records
 
-The same set of reviews can alternatively be retrieved by calling the +record+ method on the scraping 
-session instance:
+=== #set_storage 
 
- reviews = scraper.session.records AmazonReview
+The +set_storage+ method accepts the following arguments:
 
-
-=== The #set_storage method
-
-The +set_storage+ method can be called with the following arguments:
-
-* _model_ A Ruby constant specifying the model to be used for storing the extracted data .
+* _model_ A Ruby constant or a symbol specifying the model to be used for storing the extracted data. If a symbol is passed, it is assumed that a model does not exist and the storage module dynamically generates one by subclassing <code>ExtraLoop::Storage::Record</code>. 
 * _session_title_ A human readable title for the extracted dataset (optional).
 
 == Command line interface 
 
-Once installed, the gem will also add to your system path the +extraloop+ executable, a command line interface to the datasets harvested through extraloop.
+Once installed, the gem will also add to your system path the +extraloop+ executable: a command line interface to the datasets harvested through ExtraLoop.
 A list of datasets can be obtained by running:
 
  extraloop datastore list:
@@ -79,4 +72,4 @@ Finally, the +export+ subcommand allows to export one or several datasets into a
 
   extraloop datastore export 51..52 -f csv
 
-Please refer to the executable inline help (<code>extraloop datastore help [command]</code>) for more usage information.
+Please refer to the executable's inline help (<code>extraloop datastore help [command]</code>) for more details.
