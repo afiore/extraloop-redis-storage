@@ -60,19 +60,23 @@ A list of datasets can be obtained by running:
  extraloop datastore list:
 
 This will generate a table like the following one:
-<code>
+
   id | title                              | model           | records
  --------------------------------------------------------------------
   48 | 1330106699 GoogleNewsStory Dataset | GoogleNewsStory | 110    
   49 | 1330106948 AmazonReview Dataset    | AmazonReview    | 0      
   51 | 1330107087 GoogleNewsStory Dataset | GoogleNewsStory | 110    
   52 | 1330111630 AmazonReview Dataset    | AmazonReview    | 10     
-</code>
+
 
 Datasets can by removed using the +delete+ subcommand:
 
  extraloop datastore delete [id]
 
 Where +id+ is either a single scraping session id, or a session id range (e.g. 48..52).
+
 Finally, the +export+ subcommand allows to export one or several datasets into a JSON or CSV documents.
+
+  extraloop datastore export 51..52 -f csv
+
 Please refer to the executable inline help (<code>extraloop datastore help [command]</code>) for more usage information.
