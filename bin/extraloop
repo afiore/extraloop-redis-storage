@@ -48,7 +48,7 @@ class DataStoreCommand < Thor
     FileUtils.mkdir(dir) unless File.exists? dir
 
     (filter sessions).each do |session|
-      filename, data = *[session.title.gsub(/\s/,"_"), session.send("to_#{format}")]
+      filename, data = *[ "#{session.id}_#{session.title.gsub(/\s/,"_")}", session.send("to_#{format}")]
       File.open("#{dir}/#{filename}.#{format}", "w") { |f| f.write data }
     end
   end

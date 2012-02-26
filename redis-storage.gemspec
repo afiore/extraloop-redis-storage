@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.homepage = 'http://github.com/afiore/extraloop-redis-storage'
 
   s.require_paths = %w[lib]
-  s.executables = []
+  s.executables = ['extraloop']
 
   s.rdoc_options = ["--charset=UTF-8"]
 
