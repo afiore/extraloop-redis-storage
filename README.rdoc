@@ -68,7 +68,7 @@ Datasets can by removed using the +delete+ subcommand:
 
 Where +id+ is either a single scraping session id, or a session id range (e.g. 48..52).
 
-Finally, the +export+ subcommand allows to export one or several datasets into a JSON or CSV documents.
+Finally, the +export+ subcommand allows to export one or several datasets as JSON or CSV documents.
 
   extraloop datastore export 51..52 -f csv
 
