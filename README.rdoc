@@ -50,7 +50,7 @@ The +set_storage+ method accepts the following arguments:
 Once installed, the gem will also add to your system path the +extraloop+ executable: a command line interface to the datasets harvested through ExtraLoop.
 A list of datasets can be obtained by running:
 
- extraloop datastore list:
+ extraloop datastore list
 
 This will generate a table like the following one:
 
