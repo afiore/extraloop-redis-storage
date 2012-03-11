@@ -2,7 +2,6 @@
 $: << File.realpath(File.dirname(File.dirname(__FILE__))) + "/lib/extraloop"
 
 require 'thor'
-require 'pry'
 require 'fileutils'
 require 'thor/group'
 require 'redis-storage'
