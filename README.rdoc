@@ -76,6 +76,5 @@ Similarly, stored datasets can be uploaded to a remote datastore:
 
   extraloop datastore push 51..48 fusion_tables -c google_username:password
 
-While Google's Fusion Tables is currently the only one implemented, support for other remote datastores (e.g.
-[couchDB](http://couchdb.apache.org/), , [cartoDB](http://cartodb.com) ), and [CKAN Webstore](http://wiki.ckan.org/Webstore) will be added soon.
-
+While Google's Fusion Tables is currently the only implemented one, support for pushing dataset to other remote 
+datastores (e.g. {couchDB}(http://couchdb.apache.org/),  {cartoDB}(http://cartodb.com) ), and {CKAN Webstore} (http://wiki.ckan.org/Webstore) is underway.
