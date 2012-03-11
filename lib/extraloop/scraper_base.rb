@@ -1,11 +1,13 @@
 class ExtraLoop::ScraperBase
   attr_reader :session
 
-  def set_storage(model, title=nil)
+
+  def set_storage(model, title=nil, options={})
     collection_name = "#{Time.now.to_i} #{model.to_s} Dataset"
     title ||= collection_name
 
     @model = model_klass = model.respond_to?(:new) && model || ExtraLoop::Storage::DatasetFactory.new(model.to_sym, @extractor_args.map(&:first)).get_class
+
     log_session! title
 
     on :data do |results|

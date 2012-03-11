@@ -11,6 +11,15 @@ class DataStoreCommand < Thor
 
   ExtraLoop::Storage::autoload_models
 
+  class << self
+    def parse_config
+      config_file = File.join(Etc.getpwuid.dir, '.extraloop.yml')
+      File.exist?(config_file) && YAML::load_file(config_file) or {}
+    end
+  end
+
+  @@config = parse_config
+
   @@sessions = ExtraLoop::Storage::ScrapingSession.all
   @@redis = Ohm.redis
 
@@ -18,16 +27,16 @@ class DataStoreCommand < Thor
       "d" => :delete,
       "e" => :export
 
-  desc "list [sessions]", "List harvested datasets filtering by session id range (e.g '25..50')"
+  desc "list [sessions]", "Lists harvested datasets filtering by session id range (e.g '25..50')"
   def list(sessions=nil)
     data = (filter sessions).map { |session| [ session.id, session.title, session.model && session.model.name, session.model && session.records.size ]}
     $stdout.puts tabularize(%w[id title model records], data)
   end
 
-  desc "delete [sessions]", "Remove datasets by session id or session id range"
+  desc "delete [sessions]", "Removes datasets by session id or session id range"
   def delete(sessions)
     deleted = 0
-    (filter sessions).each { |session| (session.delete && session.records.each(&:delete) ) && deleted += 1 }
+    (filter sessions).each { |session| session.delete && session.records.each(&:delete) && deleted += 1 }
     $stderr.puts "\n => #{deleted > 0 && deleted or 'No' } record#{'s' if deleted > 1} deleted \n\n" 
     list
   end
@@ -44,12 +53,30 @@ class DataStoreCommand < Thor
     format = options[:format]
     dir = options[:directory]
     exception = DataStoreCommand::Exceptions::FormatNotImplemented.new "Format not supported #{format}"
-    raise exception unless %w[json csv].include? format
+    raise exception unless %w[json csv yaml].include? format
     FileUtils.mkdir(dir) unless File.exists? dir
 
-    (filter sessions).each do |session|
+    filter(sessions).each do |session|
       filename, data = *[ "#{session.id}_#{session.title.gsub(/\s/,"_")}", session.send("to_#{format}")]
       File.open("#{dir}/#{filename}.#{format}", "w") { |f| f.write data }
+    end
+  end
+
+  desc "push [sessions] [remote_store]", "Uploads one or several datasets to a remote data store"
+  method_option :schema, :type => 'hash', :aliases => "-s"
+  method_option :credentials, :type => 'string', :aliases => "-a"
+
+  def push(sessions, store_type=:fusion_tables)
+
+    filter(sessions).each do |session|
+      store_type = store_type.to_sym
+      begin
+        credentials = options.fetch('credentials', @@config[:datastore] && @@config[:datastore][:credentials] && @@config[:datastore][store_type]).split(':')
+      rescue NoMethodError
+        abort "Cannot find credentials for remote datastore.\nPlease specify them using the --credential switch (e.g. 'andrea:mypassword')"
+      end
+      datastore = ExtraLoop::Storage::RemoteStore::get_transport(store_type, credentials)
+      datastore.push session
     end
   end
 
@@ -65,7 +92,6 @@ class DataStoreCommand < Thor
       exception = DataStoreCommand::Exceptions::FileNotFound.new "cannot find #{path}"
       raise exception unless File.exists?(path)
       (File.directory? path) && Dir["#{path}/*.rb"] or path
-
     end.flatten
 
     files.each { |file| require "./#{file}" }
@@ -79,7 +105,6 @@ class DataStoreCommand < Thor
     else
       @@sessions
     end
-
   end
 
   def tabularize(headers, data)
@@ -100,6 +125,7 @@ end
 
 class DataStoreCommand::Exceptions
   class FormatNotImplemented < StandardError; end
+  class UnknownDatastore < StandardError; end
   class FileNotFound < StandardError; end
 end
 

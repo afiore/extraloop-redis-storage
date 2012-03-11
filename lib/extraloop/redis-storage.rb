@@ -1,9 +1,18 @@
+require "rubygems"
 require "json"
+require "yaml"
 require "rubygems"
 require "redis"
 require "ohm"
 require "ohm/contrib"
 require "extraloop"
+
+begin
+  gem "fusion_tables", "~> 0.3.1"
+  require "fusion_tables"
+rescue Gem::LoadError
+end
+
 
 base_path = File.realpath(File.dirname(__FILE__))
 $: << "#{base_path}"
@@ -12,7 +21,7 @@ require "scraper_base"
 
 module ExtraLoop
   module Storage
-    VERSION ||= "0.0.1"
+    VERSION ||= "0.0.7"
 
     def self.connect(*args)
       Ohm.connect(*args)
@@ -26,10 +35,13 @@ module ExtraLoop
 end
 
 autoload :CSV, 'csv'
-autoload :Iconv, 'iconv'
-ExtraLoop::Storage.autoload :Record, "#{base_path}/redis-storage/record.rb"
-ExtraLoop::Storage.autoload :ScrapingSession, "#{base_path}/redis-storage/scraping_session.rb"
-ExtraLoop::Storage.autoload :Model,  "#{base_path}/redis-storage/model.rb"
-ExtraLoop::Storage.autoload :DatasetFactory,  "#{base_path}/redis-storage/dataset_factory.rb"
+autoload :Etc, 'etc'
 
+base_path << "/redis-storage"
+
+ExtraLoop::Storage.autoload :Record, "#{base_path}/record.rb"
+ExtraLoop::Storage.autoload :ScrapingSession, "#{base_path}/scraping_session.rb"
+ExtraLoop::Storage.autoload :Model,  "#{base_path}/model.rb"
+ExtraLoop::Storage.autoload :DatasetFactory,  "#{base_path}/dataset_factory.rb"
+ExtraLoop::Storage.autoload :RemoteStore, "#{base_path}/remote_store.rb"
 

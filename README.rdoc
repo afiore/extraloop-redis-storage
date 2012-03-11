@@ -4,7 +4,7 @@
 
 Persistence layer for the {ExtraLoop}[https://github.com/afiore/extraloop] data extraction toolkit.
 This module is implemented as a wrapper around {Ohm}[http://ohm.keyvalue.org], an object-hash mapping library which 
-makes easy storing structured data into Redis. It comes with a convinent command line tool, which allows to 
+makes easy storing structured data into Redis. Includes a convinent command line tool that allows to 
 list, filter, delete, and export harvested datasets.
 
 == Installation 

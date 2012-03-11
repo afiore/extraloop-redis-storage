@@ -10,4 +10,7 @@ class ExtraLoop::Storage::Model < Ohm::Model
       memo.merge(attribute => send(attribute)) 
     })
   end
+  def to_yaml
+    to_hash.to_yaml
+  end
 end

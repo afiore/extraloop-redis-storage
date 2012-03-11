@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = 'extraloop-redis-storage'
 
   s.summary     = "Redis storage for Extraloop."
-  s.description = "Redis+Ohm based storage for data sets extracted using the ExtraLoop toolkit."
+  s.description = "Redis-based Persistence layer for the ExtraLoop data extraction toolkit. Includes a convinent command line tool allowing to list, filter, delete, and export harvested datasets"
 
   s.authors  = ["Andrea Fiore"]
   s.email    = 'andrea.giulio.fiore@googlemail.com'

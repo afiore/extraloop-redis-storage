@@ -1,5 +1,6 @@
 require "rubygems"
 require "date"
+require "pry"
 require "extraloop"
 require "../lib/extraloop/redis-storage.rb"
 require "./lib/models/amazon_review.rb"

@@ -22,6 +22,10 @@ class ExtraLoop::Storage::Record < Ohm::Model
     })
   end
 
+  def to_yaml
+    to_hash.to_yaml
+  end
+
   def validate
     assert_present :session
   end
