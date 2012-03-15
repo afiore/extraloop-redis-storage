@@ -27,7 +27,7 @@ class ExtraLoop::Storage::FusionTables
     schema = defaults.merge(@options.fetch :schema, {})
 
     record.keys.
-      reject { |key| schema.keys.include?(key) }.
+      reject { |key| schema.keys.include?(key.to_s) }.
       map    { |key| {:name => key.to_s, :type => 'string'} }.
       concat(schema.map { |field, type| {:name => field.to_s, :type => type }})
   end

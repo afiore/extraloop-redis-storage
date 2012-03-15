@@ -44,4 +44,5 @@ ExtraLoop::Storage.autoload :ScrapingSession, "#{base_path}/scraping_session.rb"
 ExtraLoop::Storage.autoload :Model,  "#{base_path}/model.rb"
 ExtraLoop::Storage.autoload :DatasetFactory,  "#{base_path}/dataset_factory.rb"
 ExtraLoop::Storage.autoload :RemoteStore, "#{base_path}/remote_store.rb"
+ExtraLoop::Storage.autoload :FusionTables, "#{base_path}/remote_store/fusion_tables.rb"
 
