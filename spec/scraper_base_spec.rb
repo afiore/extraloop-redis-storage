@@ -1,9 +1,8 @@
 load "../lib/extraloop/redis-storage.rb"
+require './helpers/spec_helper'
 
 
 describe ExtraLoop::ScraperBase do
-  Ohm.connect :url => "redis://127.0.0.1:6379/7"
-
   before(:each) do
     @records = records =  (1..10).to_a.map { |n| OpenStruct.new :foo => "foo#{n}" }
     @scraper = ExtraLoop::ScraperBase.new("http://someurl.net").
@@ -91,8 +90,8 @@ describe ExtraLoop::ScraperBase do
     end
 
     it "should persist 10 records" do
-      (@scraper.session.records MyModel).should have(10).records
-      (@scraper.session.records MyModel).map(&:id).reject(&:nil?).should_not be_empty
+      @scraper.session.records.should have(10).records
+      @scraper.session.records.map(&:id).reject(&:nil?).should_not be_empty
     end
   end
 end

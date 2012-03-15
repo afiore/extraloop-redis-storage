@@ -1,8 +1,7 @@
 load "../lib/extraloop/redis-storage.rb"
+require "./helpers/spec_helper"
 
 describe ExtraLoop::Storage::DatasetFactory do
-  Ohm.connect :url => "redis://127.0.0.1:6379/7"
-
   describe "#get_class" do
     context "with invalid input" do
       before do 
@@ -25,7 +24,8 @@ describe ExtraLoop::Storage::DatasetFactory do
     context "with valid input" do
       before do 
         @factory = ExtraLoop::Storage::DatasetFactory.new(:blurb, [:a, :b, :c])
-        @session = ExtraLoop::Storage::ScrapingSession.create
+        model = ExtraLoop::Storage::Model.create :name => @factory.get_class.name
+        @session = ExtraLoop::Storage::ScrapingSession.create :model => model
       end
 
       subject { @factory.get_class.new :session => @session }

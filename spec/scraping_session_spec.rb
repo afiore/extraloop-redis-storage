@@ -1,13 +1,14 @@
 $VERBOSE=nil
 load "../lib/extraloop/redis-storage.rb"
+require "./helpers/spec_helper"
 
 describe ExtraLoop::Storage::ScrapingSession do
-  Ohm.connect :url => "redis://127.0.0.1:6379/7"
 
   describe "#records" do
     before(:each) do
       my_collection = ExtraLoop::Storage::DatasetFactory.new(:MyCollection).get_class
-      @session = ExtraLoop::Storage::ScrapingSession.create
+      model = ExtraLoop::Storage::Model.create :name => my_collection.to_s
+      @session = ExtraLoop::Storage::ScrapingSession.create :model => model
       5.times do
         item = my_collection.create(:session => @session)
       end
@@ -15,7 +16,7 @@ describe ExtraLoop::Storage::ScrapingSession do
 
     context "dataset class exists" do
       context "passing a constant" do
-        subject { @session.records(Mycollection) }
+        subject { @session.records }
         it { should have(5).items  }
         it { subject.all? { |record| record.valid? }.should be_true }
       end

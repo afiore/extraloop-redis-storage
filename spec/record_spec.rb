@@ -1,15 +1,16 @@
 load "../lib/extraloop/redis-storage.rb"
+require "./helpers/spec_helper"
 
 class MyRecord < ExtraLoop::Storage::Record
   attribute :foo
   attribute :bar
 end
 
-
 describe ExtraLoop::Storage::Record do
 
   before do
-    @session = ExtraLoop::Storage::ScrapingSession.create
+    model = ExtraLoop::Storage::Model.create(:name => MyRecord.to_s)
+    @session = ExtraLoop::Storage::ScrapingSession.create :model => model
   end
 
   context "record subclasses" do
