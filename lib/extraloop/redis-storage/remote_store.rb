@@ -6,6 +6,9 @@ Dir["#{path}/*.rb"].each { |store_adapter| require store_adapter }
 
 
 class ExtraLoop::Storage::RemoteStore
+  # 
+  # Instanciates the relevant transport class for the selected datastore
+  # 
   def self.get_transport(datastore, credentials, options={})
     classname = datastore.to_s.gsub(/^.|_./) { |chars| chars.split("").last.upcase }
     ExtraLoop::Storage.const_get(classname).new(credentials, options) if ExtraLoop::Storage.const_defined?(classname)

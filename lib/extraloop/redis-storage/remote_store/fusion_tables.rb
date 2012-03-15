@@ -4,10 +4,11 @@ class ExtraLoop::Storage::FusionTables
   def initialize(credentials, options={})
     @options = options
     @credentials = credentials
-    @api = connect
+    @api = nil
   end
 
   def push(session)
+    @api = connect!
     dataset = session.to_hash
     records = dataset[:records]
     title   = dataset[:title].gsub(/\sDataset/,'')
@@ -31,7 +32,7 @@ class ExtraLoop::Storage::FusionTables
       concat(schema.map { |field, type| {:name => field.to_s, :type => type }})
   end
 
-  def connect
+  def connect!
     return @@connection if @@connection
 
     @@connection = GData::Client::FusionTables.new
