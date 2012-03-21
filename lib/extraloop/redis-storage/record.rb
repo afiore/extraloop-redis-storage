@@ -1,4 +1,5 @@
 class ExtraLoop::Storage::Record < Ohm::Model
+  include Ohm::Callbacks
   include Ohm::Boundaries
   include Ohm::Timestamping
 

@@ -1,11 +1,7 @@
-class ExtraLoop::Storage::FusionTables
-  @@connection = nil
 
-  def initialize(credentials, options={})
-    @options = options
-    @credentials = credentials
-    @api = nil
-  end
+
+class ExtraLoop::Storage::FusionTables < ExtraLoop::Storage::RemoteStore
+  @@connection = nil
 
   def push(session)
     @api = connect!
@@ -21,11 +17,12 @@ class ExtraLoop::Storage::FusionTables
   private
   def make_schema(record)
     defaults = {
+      'id' => 'number',
       'session_id' => 'number'
     }
 
-    schema = defaults.merge(@options.fetch :schema, {})
-
+    option_schema = @options.fetch(:schema, {}).stringify_keys
+    schema = defaults.merge option_schema
     record.keys.
       reject { |key| schema.keys.include?(key.to_s) }.
       map    { |key| {:name => key.to_s, :type => 'string'} }.
@@ -34,9 +31,9 @@ class ExtraLoop::Storage::FusionTables
 
   def connect!
     return @@connection if @@connection
-
     @@connection = GData::Client::FusionTables.new
-    @@connection.clientlogin(*@credentials)
+    @credentials = @credentials.symbolize_keys
+    @@connection.clientlogin(@credentials[:username], @credentials[:password])
     @@connection
   end
 end

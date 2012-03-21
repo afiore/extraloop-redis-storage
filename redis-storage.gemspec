@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rr', "~> 1.0.4")
   s.add_development_dependency('pry', "~> 0.9.7.4")
   s.add_development_dependency('fusion_tables', "~> 0.3.1")
+  s.add_development_dependency('geocoder', '~> 1.1.1')
   
   # = MANIFEST =
   s.files = %w[

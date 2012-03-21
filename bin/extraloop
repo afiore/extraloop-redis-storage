@@ -10,15 +10,6 @@ class DataStoreCommand < Thor
 
   ExtraLoop::Storage::autoload_models
 
-  class << self
-    def parse_config
-      config_file = File.join(Etc.getpwuid.dir, '.extraloop.yml')
-      File.exist?(config_file) && YAML::load_file(config_file) or {}
-    end
-  end
-
-  @@config = parse_config
-
   @@sessions = ExtraLoop::Storage::ScrapingSession.all
   @@redis = Ohm.redis
 
@@ -63,18 +54,14 @@ class DataStoreCommand < Thor
 
   desc "push [sessions] [remote_store]", "Uploads one or several datasets to a remote data store"
   method_option :schema, :type => 'hash', :aliases => "-s"
-  method_option :credentials, :type => 'string', :aliases => "-a"
+  method_option :credentials, :type => 'hash', :aliases => "-a"
 
   def push(sessions, store_type=:fusion_tables)
+    schema = {:schema =>  options.fetch('schema', {})}
 
     filter(sessions).each do |session|
       store_type = store_type.to_sym
-      begin
-        credentials = options.fetch('credentials', @@config[:datastore] && @@config[:datastore][:credentials] && @@config[:datastore][store_type]).split(':')
-      rescue NoMethodError
-        abort "Cannot find credentials for remote datastore.\nPlease specify them using the --credential switch (e.g. 'andrea:mypassword')"
-      end
-      datastore = ExtraLoop::Storage::RemoteStore::get_transport(store_type, credentials)
+      datastore = ExtraLoop::Storage::RemoteStore::get_transport(store_type, options[:credentials], schema)
       datastore.push session
     end
   end
