@@ -14,7 +14,6 @@ class ExtraLoop::ScraperBase
     on :data do |results|
       results = results.map { |result| @scraper.send(:instanciate_model, result) }
       block_given? && yield(results) || results.each { |result| result.save if result.respond_to?(:save) }
-      binding.pry
     end
   end
 
