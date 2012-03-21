@@ -7,12 +7,14 @@ class ExtraLoop::ScraperBase
     title ||= collection_name
 
     @model = model_klass = model.respond_to?(:new) && model || ExtraLoop::Storage::DatasetFactory.new(model.to_sym, @extractor_args.map(&:first)).get_class
+    log_session! title
 
     log_session! title
 
     on :data do |results|
       results = results.map { |result| @scraper.send(:instanciate_model, result) }
       block_given? && yield(results) || results.each { |result| result.save if result.respond_to?(:save) }
+      binding.pry
     end
   end
 
