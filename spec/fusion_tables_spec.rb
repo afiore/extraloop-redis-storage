@@ -1,5 +1,4 @@
-require '../lib/extraloop/redis-storage'
-require './helpers/spec_helper'
+require 'helpers/spec_helper'
 require 'gdata'
 
 class MyRecord < ExtraLoop::Storage::Record

@@ -1,5 +1,4 @@
-load "../lib/extraloop/redis-storage.rb"
-require "./helpers/spec_helper"
+require "helpers/spec_helper"
 
 class MyRecord < ExtraLoop::Storage::Record
   attribute :foo
