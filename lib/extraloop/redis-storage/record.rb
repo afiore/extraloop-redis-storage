@@ -1,10 +1,11 @@
 class ExtraLoop::Storage::Record < Ohm::Model
   include Ohm::Callbacks
   include Ohm::Boundaries
+  include Ohm::Typecast
   include Ohm::Timestamping
 
   reference :session, ExtraLoop::Storage::ScrapingSession
-  attribute :extracted_at
+  attribute :extracted_at, Time
   index :session_id
 
   def initialize attrs={}
@@ -39,8 +40,9 @@ class ExtraLoop::Storage::Record < Ohm::Model
     klass = self
 
     while klass != ExtraLoop::Storage::Record
-      attributes.concat(klass.superclass.attributes).uniq!
-      indices.concat(klass.superclass.indices).uniq!
+      %w[attributes indices counters].each do |method|
+        send(method).concat(klass.superclass.send(method)).uniq!
+      end
       klass = klass.superclass
     end
   end
