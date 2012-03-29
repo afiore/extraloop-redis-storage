@@ -3,6 +3,8 @@ require "helpers/spec_helper"
 class MyRecord < ExtraLoop::Storage::Record
   attribute :foo
   attribute :bar
+  counter :n
+  index :bar
 end
 
 describe ExtraLoop::Storage::Record do
@@ -21,6 +23,11 @@ describe ExtraLoop::Storage::Record do
       it { subject.extracted_at.should be_a_kind_of(Time) }
       it { subject.session.should eql(@session) }
 
+      it "should correctly increment counters" do
+        3.times { subject.incr :n }
+        subject.n.should eql(3)
+      end
+
       context "without a session attribute" do
         subject { MyRecord.new  }
         it { subject.valid?.should_not be_true }
@@ -31,6 +38,18 @@ describe ExtraLoop::Storage::Record do
       subject { MyRecord.create(:session => @session, :extracted_at => Time.now) }
       it { subject.extracted_at.should be_a_kind_of(Time) }
       it { subject.session.should eql(@session) }
+    end
+
+    describe "#find" do
+      before do
+        MyRecord.create(:foo => 'foo', :bar => 'bar', :session => @session)
+        MyRecord.create(:foo => 'foo', :bar => 'bar', :session => @session)
+        @target = MyRecord.create(:foo => 'foo', :bar => 'foo', :session => @session)
+        MyRecord.create(:foo => 'foo', :bar => 'bar', :session => @session)
+      end
+
+      subject { MyRecord.find(:bar => 'foo').first }
+      it { should eql(@target) }
     end
 
     describe "Record::last" do
