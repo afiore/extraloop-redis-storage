@@ -6,20 +6,21 @@ class ExtraLoop::Storage::ScrapingSession < Ohm::Model
 
   attribute :title
   reference :model, ExtraLoop::Storage::Model
+  index :model_id
   
   def records(params={})
-    klass = if Object.const_defined?(model.name)
-      Object.const_get(model.name)
+    klass = if Object.const_defined?(model.id)
+      Object.const_get(model.id)
     else
       dynamic_class = Class.new(ExtraLoop::Storage::Record) do
-        # override default to_hash so that it will return the Redis hash
+        # override the default to_hash so that it will return the Redis hash
         # internally stored by Ohm
         def to_hash
           Ohm.redis.hgetall self.key
         end
       end
 
-      Object.const_set(model.name, dynamic_class)
+      Object.const_set(model.id, dynamic_class)
       dynamic_class
     end
 

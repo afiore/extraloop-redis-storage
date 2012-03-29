@@ -10,8 +10,7 @@ end
 describe ExtraLoop::Storage::Record do
 
   before do
-    model = ExtraLoop::Storage::Model.create(:name => MyRecord.to_s)
-    @session = ExtraLoop::Storage::ScrapingSession.create :model => model
+    @session = ExtraLoop::Storage::ScrapingSession.create :model => ExtraLoop::Storage::Model[:MyRecord]
   end
 
   context "record subclasses" do

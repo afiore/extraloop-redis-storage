@@ -6,8 +6,8 @@ describe ExtraLoop::Storage::ScrapingSession do
   describe "#records" do
     before(:each) do
       my_collection = ExtraLoop::Storage::DatasetFactory.new(:MyCollection).get_class
-      model = ExtraLoop::Storage::Model.create :name => my_collection.to_s
-      @session = ExtraLoop::Storage::ScrapingSession.create :model => model
+      @model = ExtraLoop::Storage::Model[:MyCollection]
+      @session = ExtraLoop::Storage::ScrapingSession.create :model => @model
       5.times do
         item = my_collection.create(:session => @session)
       end

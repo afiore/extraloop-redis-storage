@@ -22,9 +22,7 @@ class ExtraLoop::ScraperBase
   def log_session!(title="")
     if !@session
       ns = ExtraLoop::Storage
-      results = ns::Model.find :name => @model
-      model = results.any? && results.first || ns::Model.create(:name => @model)
-      @session = ns::ScrapingSession.create :title => title, :model =>  model
+      @session = ns::ScrapingSession.create :title => title, :model =>  ExtraLoop::Storage::Model[@model.to_s]
     end
   end
 

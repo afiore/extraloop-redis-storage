@@ -9,7 +9,7 @@ class ExtraLoop::Storage::Record < Ohm::Model
   index :session_id
 
   def initialize attrs={}
-    self.class.send :_inherit!
+    self.class.send(:_inherit!)
     super attrs
   end
 

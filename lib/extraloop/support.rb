@@ -20,6 +20,9 @@ class Object
 end
 
 class String
+  def capitalize_first
+    self[0].upcase + self[1, size]
+  end
   def camel_case
     self.gsub(/^.|_./) { |chars| chars.split("").last.upcase }
   end

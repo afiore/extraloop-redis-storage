@@ -10,8 +10,7 @@ describe ExtraLoop::Storage::FusionTables do
   describe "#push" do
 
     before do
-      model = ExtraLoop::Storage::Model.create :name => MyRecord.to_s
-      @dataset = ExtraLoop::Storage::ScrapingSession.create :title => 'test dataset', :model => model
+      @dataset = ExtraLoop::Storage::ScrapingSession.create :title => 'test dataset', :model => ExtraLoop::Storage::Model[:MyRecord]
 
       5.times do |n|
         MyRecord.create :index => n, :session => @dataset 

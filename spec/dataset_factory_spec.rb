@@ -23,8 +23,7 @@ describe ExtraLoop::Storage::DatasetFactory do
     context "with valid input" do
       before do 
         @factory = ExtraLoop::Storage::DatasetFactory.new(:blurb, [:a, :b, :c])
-        model = ExtraLoop::Storage::Model.create :name => @factory.get_class.name
-        @session = ExtraLoop::Storage::ScrapingSession.create :model => model
+        @session = ExtraLoop::Storage::ScrapingSession.create :model => ExtraLoop::Storage::Model[:Blurb]
       end
 
       subject { @factory.get_class.new :session => @session }
