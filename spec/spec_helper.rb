@@ -1,5 +1,5 @@
 require 'pry'
-path = File.dirname(File.dirname(File.dirname(__FILE__)))
+path = File.dirname(File.dirname(__FILE__))
 $: << path + "/lib/extraloop"
 
 require "redis-storage"

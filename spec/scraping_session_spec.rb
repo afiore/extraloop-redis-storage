@@ -1,5 +1,5 @@
 $VERBOSE=nil
-require "helpers/spec_helper"
+require "spec_helper"
 
 describe ExtraLoop::Storage::ScrapingSession do
 

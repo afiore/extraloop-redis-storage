@@ -1,4 +1,4 @@
-require 'helpers/spec_helper'
+require 'spec_helper'
 
 
 describe ExtraLoop::ScraperBase do

@@ -1,6 +1,11 @@
 require "date"
+require "rspec/core/rake_task"
 require 'pry'
 
+
+RSpec::Core::RakeTask.new(:spec)
+task :default => :spec
+  
 def releases
   releases = `git tag -l v[0-9]*`.split(/\n/).map { |v| v.gsub(/^v/, '').split(".").map(&:to_i) }
   releases.empty? && [[0,0,1]] || releases
