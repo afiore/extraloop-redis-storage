@@ -1,3 +1,6 @@
+== 0.0.9  / 2012-03-04
+  * Removed Object#try method
+
 == 0.0.8  / 2012-03-04
   * Allowing to type-cast attributes in Ohm models
   * few other bug fixes here and there
