@@ -6,6 +6,8 @@ require "redis-storage"
 
 RSpec.configure do |config|
   config.mock_with :rr
+
+  # flush db content after each test run
   config.after(:all) do
     Ohm.flush
   end

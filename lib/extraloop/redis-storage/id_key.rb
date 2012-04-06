@@ -5,11 +5,11 @@
 #
 module ExtraLoop::Storage::IdKey
   # Public: A regex to be used in order to valid the key string format
-  ID_FORMAT = /^[a-zA-Z\-\_]+/ 
+  ID_FORMAT = /^[a-zA-Z\-\_]+$/ 
 
   def [](id, attributes={})
-    id = prefix(id)
     raise ArgumentError.new "Invalid id '#{id}'" unless id =~ ID_FORMAT
+    id = prefix(id)
 
     if record = super(id)
       record.update(attributes) if attributes.any?

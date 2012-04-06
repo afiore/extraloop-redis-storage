@@ -18,6 +18,12 @@ end
 describe Entry do
   describe "::[]()" do
 
+    context "with invalid key", :t => true do
+      it "should raise an error when the id key contains spaces" do
+        lambda { Entry['hello world'] }.should raise_error(ArgumentError)
+      end
+    end
+
     context "without arguments" do
       before do
         @entry = Entry['foo']
