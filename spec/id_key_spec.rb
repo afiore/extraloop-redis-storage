@@ -18,9 +18,17 @@ end
 describe Entry do
   describe "::[]()" do
 
-    context "with invalid key", :t => true do
+    context "with invalid key" do
       it "should raise an error when the id key contains spaces" do
         lambda { Entry['hello world'] }.should raise_error(ArgumentError)
+      end
+    end
+
+    context "with a symbol as key" do
+      before { @entry = Entry['foo', {:session => session, :foo => 'foo' } ] }
+
+      it "should cast the id as a string" do
+        @entry.id.should eql('Entry:foo')
       end
     end
 

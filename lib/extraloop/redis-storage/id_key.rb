@@ -9,13 +9,13 @@ module ExtraLoop::Storage::IdKey
 
   def [](id, attributes={})
     raise ArgumentError.new "Invalid id '#{id}'" unless id =~ ID_FORMAT
-    id = prefix(id)
+    id = prefix(id.to_s)
 
     if record = super(id)
       record.update(attributes) if attributes.any?
       record
     else 
-      create(attributes.merge(:id => id, :name => name))
+      create(attributes.merge(:id => id))
     end
   end
 

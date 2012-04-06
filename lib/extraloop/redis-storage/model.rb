@@ -2,10 +2,19 @@
 # are associated to a Scraping session object.
 #
 class ExtraLoop::Storage::Model < Ohm::Model
+  extend ExtraLoop::Storage::IdKey
 
-  def self.[](id)
+
+  # Internal: Overrides the default id key handling function and 
+  # replaces it with a validity check
+  #
+  # Returns the model name
+  # Raises an ArgumentError if the id string is not capitalized
+  #
+
+  def self.prefix(id)
     raise ArgumentError.new "model Id should be capitalized" unless id.to_s[0] =~ /[A-Z]/
-    super(id) || create(:id => id)
+    id
   end
 
   def to_hash
