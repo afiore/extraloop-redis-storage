@@ -13,9 +13,5 @@ describe ExtraLoop::Storage::Model do
     it "should throw an argument error if the model id is not capitalized" do
       lambda { ExtraLoop::Storage::Model[:my_model] }.should raise_error(ArgumentError)
     end
-
-    after do
-      Ohm.flush
-    end
   end
 end
