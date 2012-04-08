@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 
   s.name              = 'extraloop-redis-storage'
   s.version           = '0.0.10'
-  s.date              = '2012-04-06'
+  s.date              = '2012-04-08'
   s.rubyforge_project = 'extraloop-redis-storage'
 
   s.summary     = "Redis storage for Extraloop."
