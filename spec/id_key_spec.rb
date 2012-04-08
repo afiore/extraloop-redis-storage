@@ -75,4 +75,23 @@ describe Entry do
       end
     end
   end
+
+  describe "::create" do
+
+  end
+
+  describe "#save" do
+    context "with an entry initialized through the '[]' method" do
+      before do
+        @entry = Entry['hello-test', {session: session}]
+        @entry.foo = 'test'
+        @entry.save
+      end
+
+      it "should retain the initial id when calling save" do
+        @entry.id.should eql('Entry:hello-test')
+        Entry['hello-test'].foo.should eql('test')
+      end
+    end
+  end
 end
