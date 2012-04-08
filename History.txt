@@ -1,5 +1,8 @@
+== 0.0.12 / 2012-03-08
+  * more improvements to ExtraLoop::Storage::IdKey
+
 == 0.0.11 / 2012-03-08
-  * Improved Ohm::Storage::IdKey module
+  * Improved ExtraLoop::Storage::IdKey module
 
 == 0.0.10 / 2012-03-06
   * Implemented non-numeric record ids for ExtraLoop::Storage::Record

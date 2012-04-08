@@ -15,6 +15,22 @@ describe ExtraLoop::Storage::Record do
 
   context "record subclasses" do
 
+    describe "#valid?" do
+      subject { @record = MyRecord.new(:foo => 'foo', :bar => 'bar').valid? }
+      it { should be_false }
+    end
+
+    describe "#errors" do
+      before do
+        @record = MyRecord.new(:foo => 'foo', :bar => 'bar')
+        @record.save
+      end
+
+      subject { @record.errors }
+
+      it { should include([:session, :not_present]) }
+    end
+
     describe "#save" do
 
       subject { MyRecord.new(:session => @session, :extracted_at => Time.now).save }
@@ -91,10 +107,5 @@ describe ExtraLoop::Storage::Record do
         it { should have_key(:session_id) }
       end
     end
-  end
-
-  after do
-    redis = Ohm.redis
-    redis.keys("[^art]*").each { |key| redis.del(key) }
   end
 end

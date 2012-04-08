@@ -33,7 +33,7 @@ require "support"
 
 module ExtraLoop
   module Storage
-    VERSION ||= "0.0.11"
+    VERSION ||= "0.0.12"
 
     def self.connect(*args)
       Ohm.connect(*args)

@@ -44,8 +44,10 @@ module ExtraLoop::Storage::IdKey
   # Raises an 'ArgumentError' if the provided id string does not match the ID_FORMAT (e.g. if it contains non-alphanumeric characters').
   #
   def [](id, attributes={})
+    # automatically strip prefix from id
+    id = id.to_s.gsub(prefix + KEY_SEPARATOR, '')
     raise ArgumentError.new "Invalid id '#{id}'" unless id =~ ID_FORMAT
-    id = prefix(id.to_s, attributes)
+    id = [prefix, id].reject(&:empty?).join(KEY_SEPARATOR)
 
     if record = super(id)
       record.update(attributes) if attributes.any?
@@ -60,7 +62,6 @@ module ExtraLoop::Storage::IdKey
   # While default behviour is to prepend the record's model class name to id string, it is possible to override this method
   # so that the generated record id key will include other attributes (see example below).
   #
-  # id - The record id.
   # attributes - The attributes hash
   #
   # Examples
@@ -74,8 +75,8 @@ module ExtraLoop::Storage::IdKey
   #   extend IdKey
   #   attribute :locale
   #
-  #   def self::prefix(id, attrs={})
-  #     [self.name, attrs.fetch(:locale, 'en'), id]).join(IdKey::KEY_SEPARATOR)
+  #   def self::prefix(attrs={})
+  #     [self.name, attrs.fetch(:locale, 'en')].join(IdKey::KEY_SEPARATOR)
   #   end
   # end
   #
@@ -87,8 +88,8 @@ module ExtraLoop::Storage::IdKey
   # Returns the record id key.
   #
 
-  def prefix(id, attributes={})
-    [self.name, id].join(KEY_SEPARATOR)
+  def prefix(attributes={})
+    self.name
   end
 
 end

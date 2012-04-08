@@ -32,6 +32,16 @@ describe Entry do
       end
     end
 
+    context "with a generated id as argument" do
+      before do
+        @entry = Entry['fufu']
+      end
+
+      subject { Entry[@entry.id] }
+      it { should eql(@entry) }
+      it { should eql(Entry['fufu'])}
+    end
+
     context "without arguments" do
       before do
         @entry = Entry['foo']
