@@ -8,7 +8,7 @@ task :default => :spec
   
 def releases
   releases = `git tag -l v[0-9]*`.split(/\n/).map { |v| v.gsub(/^v/, '').split(".").map(&:to_i) }
-  releases.empty? && [[0,0,1]] || releases
+  releases.empty? && [[0,0,1]] || releases.sort
 end
 
 def new_release
