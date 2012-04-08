@@ -4,15 +4,19 @@
 class ExtraLoop::Storage::Model < Ohm::Model
   extend ExtraLoop::Storage::IdKey
 
-
   # Internal: Overrides the default id key handling function and 
-  # replaces it with a validity check
+  # replaces it with a validity check.
+  #
+  # id - The record id.
+  # attributes - The record attributes (defaults to an empty array)
+  #
+  #
   #
   # Returns the model name
   # Raises an ArgumentError if the id string is not capitalized
   #
 
-  def self.prefix(id)
+  def self.prefix(id, attributes={})
     raise ArgumentError.new "model Id should be capitalized" unless id.to_s[0] =~ /[A-Z]/
     id
   end
